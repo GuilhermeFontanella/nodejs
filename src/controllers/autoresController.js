@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import autores from './../models/Autor.js';
+import NotFound from '../errors/NotFound.js';
 
 class AutoresController {
     static buscarAutores = async (req, res, next) => {
@@ -15,21 +16,13 @@ class AutoresController {
     static buscarAutorById = async (req, res, next) => {
         const id = req.params.id;
         try {
-            const livroDocs = await autores.findById(id);
-            if (!livroDocs) {
-                const qtd = livroDocs;
-                console.log(qtd);
-                res.status(200).json({
-                    data: [],
-                    status: 200,
-                    totalRegistros: 0
-                });
+            const autorDoc = await autores.findById(id);
+            if (autorDoc) {
+               res.status(201).send(autorDoc.toJSON()); 
             } else {
-                res.status(200).json({
-                    data: livroDocs,
-                    status: 200
-                });
+                next(new NotFound('Author not found.').sendResponse(res)); 
             }
+            console.log('passou aqui')
         } catch (err) {
             console.error(err);
             next(err);
