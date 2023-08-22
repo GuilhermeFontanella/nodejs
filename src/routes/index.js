@@ -6,7 +6,7 @@ import editoras from './editorasRoutes.js';
 import usuarios from './usuariosRoutes.js';
 
 const corsOptions = {
-    origin: 'http://localhost:4200',
+    origin: 'https://nodejs-yjfp-dev.fl0.io/',
     optionSuccessStatus: 200
 };
 
