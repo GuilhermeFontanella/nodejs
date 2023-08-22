@@ -6,7 +6,7 @@ import editoras from './editorasRoutes.js';
 import usuarios from './usuariosRoutes.js';
 
 const corsOptions = {
-    origin: 'https://nodejs-yjfp-dev.fl0.io/',
+    origin: 'https://pizzaria-three.vercel.app',
     optionSuccessStatus: 200
 };
 
