@@ -12,9 +12,8 @@ db.once('open', () => {
 
 const app = express();
 const port = process.env.PORT;
-const host = process.env.HOST;
 
-app.listen(port, host);
+
 app.use(express.json());
 routes(app);
 
@@ -22,5 +21,7 @@ app.use(handler404);
 
 app.use(errorHandler);
 app.use(notFooundHandler);
+
+app.listen(port);
 
 export default app;
