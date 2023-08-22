@@ -11,6 +11,9 @@ db.once('open', () => {
 });
 
 const app = express();
+const port = process.env.PORT;
+
+app.listen(port);
 app.use(express.json());
 routes(app);
 
