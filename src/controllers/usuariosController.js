@@ -1,4 +1,4 @@
-import usuarios from '../models/Usuario.js';
+import { usuarios } from '../models/index.js';
 
 class UsuariosController {
     static buscarUsuarios = async (req, res) => {

@@ -1,4 +1,4 @@
-import livros from '../models/Livro.js';
+import { editoras, livros } from '../models/index.js';
 
 class LivroController {
     static buscarLivros = async (req, res, next) => {
@@ -22,6 +22,21 @@ class LivroController {
             next(err);
         }
     };
+
+    // static buscarLivros = async (req, res, next) => {
+    //     const { editora, titulo, autor  } = req.query;
+    //     console.log(req.params)
+    //     try {
+    //         const livroDocs = await livros.find({
+    //             titulo: titulo,
+    //             editora: editora,
+    //             autor: autor
+    //         });
+    //         res.status(200).json(livroDocs);
+    //     } catch (err) {
+    //         next(err);
+    //     }
+    // };
 
     static cadastrarLivro = async (req, res, next) => {
         const novoLivro = new livros(req.body);
@@ -65,11 +80,25 @@ class LivroController {
     };
 
     static buscarLivrosPesquisaPersonalizada = async (req, res, next) => {
-        let query = req.query.titulo;
-        
+        const { editora, titulo, autor  } = req.query;
+        const regex = new RegExp(titulo, 'i');
+        const busca = {};
+
+        if (titulo) busca.titulo = regex;
+        if (autor) busca.autor = autor;
+
         try {
-            const livroDocs = await livros.find({'titulo': query}, {});
-            res.status(200).json(livroDocs);
+            if (editora) {
+                const editorasDoc = await editoras.findOne({ nome_fantasia: editora});
+                busca.editora = editorasDoc._id;
+                const livroDocs = await livros.find({ editora: editorasDoc._id} );
+                res.status(200).json(livroDocs);
+            } else {
+                const livroDocs = await livros.find(busca);
+                res.status(200).json(livroDocs);
+            }
+
+            console.log(busca)
         } catch (err) {
             next(err);
         }

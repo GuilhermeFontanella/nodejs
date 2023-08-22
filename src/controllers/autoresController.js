@@ -1,8 +1,14 @@
 import mongoose from 'mongoose';
-import autores from './../models/Autor.js';
+import { autores } from '../models/index.js';
 import NotFound from '../errors/NotFound.js';
 
 class AutoresController {
+
+    static notFoundVerifier(dataDoc, response, message, next) {
+        if (dataDoc !== null) response.send(201).json(dataDoc.toJSON());
+        else next(new NotFound(message).sendResponse(response));
+    }
+
     static buscarAutores = async (req, res, next) => {
         try {
             const livroDocs = await autores.find();
@@ -17,12 +23,7 @@ class AutoresController {
         const id = req.params.id;
         try {
             const autorDoc = await autores.findById(id);
-            if (autorDoc) {
-               res.status(201).send(autorDoc.toJSON()); 
-            } else {
-                next(new NotFound('Author not found.').sendResponse(res)); 
-            }
-            console.log('passou aqui')
+            this.notFoundVerifier(autorDoc, res, 'Author not found.', next);
         } catch (err) {
             console.error(err);
             next(err);
@@ -43,8 +44,8 @@ class AutoresController {
         const id = req.params.id;
         const atualizaAutor = req.body;
         try {
-            await autores.findByIdAndUpdate(id, atualizaAutor);
-            res.status(200).send({message: 'Autor atualizado com sucesso.'});
+            const autorDoc = await autores.findByIdAndUpdate(id, atualizaAutor);
+            this.notFoundVerifier(autorDoc, res, 'Author not found.', next);
         } catch (err) {
             next(err);
         }
@@ -53,8 +54,8 @@ class AutoresController {
     static deletarAutor = async (req, res, next) => {
         const id = req.params.id;
         try {
-            await autores.findByIdAndRemove(id);
-            res.status(200).send({message: 'Autor removido com sucesso.'});
+            const autorDoc = await autores.findByIdAndRemove(id);
+            this.notFoundVerifier(autorDoc, res, 'Author not found.', next);
         } catch (err) {
             next(err);
         }

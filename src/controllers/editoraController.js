@@ -1,5 +1,5 @@
 /* eslint-disable no-undef */
-import editoras from './../models/Editora.js';
+import { editoras } from '../models/index.js';
 
 class EditoraController {
     static buscarEditoras = async (req, res) => {
